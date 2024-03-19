@@ -1,0 +1,62 @@
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0; /* Light gray background */
+}
+
+/* Canvas styles */
+canvas {
+    display: block;
+    margin: 20px auto; /* Center canvas */
+    border: 2px solid #333; /* Dark gray border */
+    background-color: #fff; /* White canvas background */
+}
+
+/* Toolbox styles */
+#toolbox {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#toolbox button {
+    margin: 5px;
+    padding: 8px 12px;
+    background-color: #4CAF50; /* Green */
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#toolbox input[type="text"] {
+    padding: 8px;
+    margin: 5px;
+}
+
+/* Drawing card styles */
+.drawing-card {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 5px;
+    background-color: #fff; /* White background */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Light shadow */
+}
+
+.drawing-card img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 5px;
+}
+
+.drawing-card p {
+    margin-top: 5px;
+}
+
+.drawing-card button {
+    margin-top: 10px;
+}
