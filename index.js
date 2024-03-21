@@ -1,77 +1,69 @@
 // Firebase keys
-var apiKey = config.API_KEY
-var authDomain = config.AUTH_DOMAIN
-var projectId = config.AUTH_DOMAIN
-var storageBucket = config.STORAGE_BUCKET
-var messagingSenderId = config.MSG_SENDER_ID
-var appId = config.APP_ID
-var measurementId = config.MEASUREMENT_ID
+//var apiKey = config.API_KEY
+//var authDomain = config.AUTH_DOMAIN
+//var projectId = config.AUTH_DOMAIN
+//var storageBucket = config.STORAGE_BUCKET
+//var messagingSenderId = config.MSG_SENDER_ID
+//var appId = config.APP_ID
+//var measurementId = config.MEASUREMENT_ID
 
 // Initialize firebase
-const firebaseConfig = {
-    apiKey: apiKey,
-    authDomain: authDomain,
-    projectId: projectId,
-    storageBucket: storageBucket,
-    messagingSenderId: messagingSenderId,
-    appId: appId
-};
+//const firebaseConfig = {
+ //   apiKey: apiKey,
+   // authDomain: authDomain,
+    //projectId: projectId,
+ //   storageBucket: storageBucket,
+ //   messagingSenderId: messagingSenderId,
+ //   appId: appId
+//};
 
 //firebase.initializeApp(firebaseConfig);
 //const db = firebase.firestore();
 
-
-//******************************************* CANVAS VARS ***************************************
-
 var canvas = document.getElementById("draw");
 var ctx = canvas.getContext("2d");
 let color = "#000";
+let offsetX = canvas.offsetLeft;
+let offsetY = canvas.offsetTop;
 let brushthickness = 7;
+const erase = () => (ctx.globalCompositeOperation = "destination-out");
+//set current color
 document.querySelector(".color-btn div").style.backgroundColor = color;
-
-//******************************************* RESIZE CANVAS ***************************************
-
-function resize() {
-  ctx.canvas.width = window.innerWidth - 20;
-  ctx.canvas.height = window.innerHeight;
-}
 
 resize();
 
-//************************************** DOWNLOAD CANVAS ******************************************
-
-function onSave() {
-  const link = document.createElement('a');
-  link.download = 'sketch.png';
-  link.href = canvas.toDataURL();
-  link.click();
-  link.delete;
-}
-
-// Eraser
-const erase = () => (ctx.globalCompositeOperation = "destination-out");
-
-// Brush size dropdown
 function sizeList() {
   document.querySelector(".size-list").classList.toggle("show-list");
+  brushSize();
 }
 
-// Set brush size
+//*************************************************************************************************
+//*************************************** SET BRUSH SIZE ******************************************
+//*************************************************************************************************
+
 function brushSize() {
   var brushSet = document.getElementsByClassName("size");
   Array.prototype.forEach.call(brushSet, function (element) {
     element.addEventListener("click", function () {
       brushthickness = element.getAttribute("style").substr(11, 2);
+      console.log(brushthickness);
     });
   });
 }
 
-// Set color
+//*************************************************************************************************
+//**************************************** SET COLOR TO PALETTE ***********************************
+//*************************************************************************************************
+
 function setActiveColor() {
   document.querySelector(".color-btn div").style.backgroundColor = color;
   ctx.strokeStyle = color;
   ctx.globalCompositeOperation = "source-over";
 }
+
+//*************************************************************************************************
+//**************************************** SET COLOR TO BRUSH *************************************
+//*************************************************************************************************
 
 function setColor() {
   var palette = document.getElementsByClassName("color");
@@ -83,15 +75,27 @@ function setColor() {
   });
 }
 
+//*************************************************************************************************
+//****************************************** COLOR PICKER *****************************************
+//*************************************************************************************************
+
 function colorPick() {
   color = document.getElementById("color-picker").value;
   setActiveColor();
 }
 
+//*************************************************************************************************
+//******************************************* RESIZE CANVAS ***************************************
+//*************************************************************************************************
+
 function resize() {
   ctx.canvas.width = window.innerWidth - 20;
   ctx.canvas.height = window.innerHeight;
 }
+
+//*************************************************************************************************
+//**************************************** SET CURSOR POSITION *************************************
+//*************************************************************************************************
 
 // initialize position as 0,0
 var pos = { x: 0, y: 0 };
@@ -101,7 +105,11 @@ function setPosition(e) {
   pos.x = parseInt(e.clientX - offsetX);
   pos.y = parseInt(e.clientY - offsetY);
 }
-// Draw!
+
+//*************************************************************************************************
+//********************************************** DRAW *********************************************
+//*************************************************************************************************
+
 function draw(e) {
   if (e.buttons !== 1) return; // if mouse is not clicked, do not go further
 
@@ -113,10 +121,24 @@ function draw(e) {
   setPosition(e);
   ctx.lineTo(pos.x, pos.y); // to position
   ctx.closePath();
-  ctx.stroke(); // draw
+  ctx.stroke(); // draw it!
 }
 
+//*************************************************************************************************
+//************************************** DOWNLOAD CANVAS ******************************************
+//*************************************************************************************************
+
+function onSave() {
+  const link = document.createElement('a');
+  link.download = 'sketch.png';
+  link.href = canvas.toDataURL();
+  link.click();
+  link.delete;
+}
+
+//*************************************************************************************************
 //***************************************** EVENT LISTENERS ***************************************
+//*************************************************************************************************
 
 // add window event listener to trigger when window is resized
 window.addEventListener("resize", resize);
