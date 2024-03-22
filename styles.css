@@ -23,10 +23,11 @@ header{
 }
 .tools{
     display: flex;
+    padding: 10px 5%;
     justify-content: center;
     font-family: 'Helvetica Neue', sans-serif;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
 }
 .color-palette{
     display: grid;
@@ -51,7 +52,8 @@ header{
     font-size: 13px;
     color: rgb(19, 19, 88);
     background: none;
-    border: .8px solid rgb(207, 205, 205);
+    border: .8px #fafafb;
+    height: 47px;
     position: relative;
 }
 .btn:hover{
@@ -59,8 +61,9 @@ header{
 }
 
 .color-btn{
-    width: 50px;
+    width: 47px;
     padding: 5px 5px;
+    border: .8px solid rgb(207, 205, 205);
     position: relative;
 }
 .color-btn div{
@@ -68,10 +71,11 @@ header{
     height: 20px;
     margin: 0;
     padding: 0;
-    background-color: green;
+    background-color: black;
 }
 .size-btn{
-    padding: 5px;
+    height: 47px;
+    padding: 7px;
 }
 .size-btn span{
     margin: 0 8px;
