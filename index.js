@@ -1,31 +1,10 @@
-// Firebase keys
-//var apiKey = config.API_KEY
-//var authDomain = config.AUTH_DOMAIN
-//var projectId = config.AUTH_DOMAIN
-//var storageBucket = config.STORAGE_BUCKET
-//var messagingSenderId = config.MSG_SENDER_ID
-//var appId = config.APP_ID
-//var measurementId = config.MEASUREMENT_ID
-
-// Initialize firebase
-//const firebaseConfig = {
- //   apiKey: apiKey,
-   // authDomain: authDomain,
-    //projectId: projectId,
- //   storageBucket: storageBucket,
- //   messagingSenderId: messagingSenderId,
- //   appId: appId
-//};
-
-//firebase.initializeApp(firebaseConfig);
-//const db = firebase.firestore();
-
 var canvas = document.getElementById("draw");
 var ctx = canvas.getContext("2d");
 let color = "#000";
 let offsetX = canvas.offsetLeft;
 let offsetY = canvas.offsetTop;
 let brushthickness = 7;
+
 const erase = () => (ctx.globalCompositeOperation = "destination-out");
 //set current color
 document.querySelector(".color-btn div").style.backgroundColor = color;
@@ -82,6 +61,13 @@ function setColor() {
 function colorPick() {
   color = document.getElementById("color-picker").value;
   setActiveColor();
+}
+
+// Function to set bucket fill mode
+function setBucket() {
+  color = document.getElementById('color-picker').value;
+  canvas.setBackgroundColor(color);
+  canvas.renderAll();
 }
 
 //*************************************************************************************************
