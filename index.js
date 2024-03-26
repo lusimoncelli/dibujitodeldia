@@ -92,12 +92,11 @@ function setPosition(e) {
   pos.y = parseInt(e.clientY - offsetY);
 }
 
-//*************************************************************************************************
+
 //********************************************** DRAW *********************************************
-//*************************************************************************************************
 
 function draw(e) {
-  if (e.buttons !== 1) return; // if mouse is not clicked, do not go further
+  if (e.buttons !== 1 && e.type !== "touchmove") return; // if mouse is not clicked, do not go further
 
   ctx.beginPath(); // begin the drawing path
   ctx.lineWidth = brushthickness; // width of line
@@ -110,9 +109,7 @@ function draw(e) {
   ctx.stroke(); // draw it!
 }
 
-//*************************************************************************************************
 //************************************** DOWNLOAD CANVAS ******************************************
-//*************************************************************************************************
 
 function onSave() {
   const link = document.createElement('a');
@@ -122,9 +119,7 @@ function onSave() {
   link.delete;
 }
 
-//*************************************************************************************************
 //***************************************** EVENT LISTENERS ***************************************
-//*************************************************************************************************
 
 // add window event listener to trigger when window is resized
 window.addEventListener("resize", resize);
@@ -133,8 +128,8 @@ window.addEventListener("resize", resize);
 document.addEventListener("mousemove", draw);
 document.addEventListener("mousedown", setPosition);
 document.addEventListener("mouseenter", setPosition);
+document.addEventListener("touchstart", setPosition);
 document.addEventListener("touchmove", draw);
 document.addEventListener("touchend", setPosition);
-document.addEventListener("touchstart", setPosition);
 document.getElementById("color-picker").addEventListener("change", colorPick);
 setColor();
