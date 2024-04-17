@@ -23,18 +23,20 @@ header{
     align-items: center;
 }
 
-header p.subtitle {
-    font-size: 16px;
-    margin-top: 5px;
-}
-header p.word-of-the-day {
-    font-size: 16px;
-    margin-top: 5px;
-}
-
 header h2 {
     font-size: 24px;
+    margin-bottom: 10px;
+    flex-basis: 100%;
 }
+
+header p.subtitle, 
+header p.word-of-the-day {
+    font-size: 16px;
+    margin: 0;
+    flex-basis: 100%;
+}
+
+
 .tools{
     display: flex;
     padding: 10px 5%;

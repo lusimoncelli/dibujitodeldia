@@ -81,14 +81,37 @@ const words = [
   "disciplina", "regla", "ley", "norma", "justicia", "derechos", "libertad", "igualdad", "fraternidad"
 ];
 
+const string_day = 'La palabra del día es'
+
 // Function to select a random word from the list
 function getRandomWord() {
   return words[Math.floor(Math.random() * words.length)];
 }
 
-// Insert the random word into the header
-document.querySelector("header p.word-of-the-day").textContent = getRandomWord();
+// Function to update the word of the day
+function updateWordOfTheDay() {
+  const currentDate = new Date();
+  const storedDate = localStorage.getItem('wordDate');
+  const storedWord = localStorage.getItem('wordOfTheDay');
 
+  // Check if the stored word is from the current day
+  if (storedDate === currentDate.toDateString() && storedWord) {
+      // If it is, use the stored word
+      document.querySelector("header p.word-of-the-day").textContent = storedWord;
+  } else {
+      // If it's not, update the word and store it with the current date
+      const newWord = getRandomWord();
+      document.querySelector("header p.word-of-the-day").textContent = newWord;
+      localStorage.setItem('wordOfTheDay', newWord);
+      localStorage.setItem('wordDate', currentDate.toDateString());
+  }
+}
+
+// Update the word of the day when the page loads
+updateWordOfTheDay();
+
+// Start the update process
+updateWordOfTheDay();
 //*************************************** SET BRUSH SIZE ******************************************
 
 
