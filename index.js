@@ -81,8 +81,6 @@ const words = [
   "disciplina", "regla", "ley", "norma", "justicia", "derechos", "libertad", "igualdad", "fraternidad"
 ];
 
-const string_day = 'La palabra del día es'
-
 // Function to select a random word from the list
 function getRandomWord() {
   return words[Math.floor(Math.random() * words.length)];
@@ -97,11 +95,11 @@ function updateWordOfTheDay() {
   // Check if the stored word is from the current day
   if (storedDate === currentDate.toDateString() && storedWord) {
       // If it is, use the stored word
-      document.querySelector("header p.word-of-the-day").textContent = storedWord;
+      document.querySelector("header p.subtitle").textContent = `La palabra del dia es ${storedWord}`;
   } else {
       // If it's not, update the word and store it with the current date
       const newWord = getRandomWord();
-      document.querySelector("header p.word-of-the-day").textContent = newWord;
+      document.querySelector("header p.subtitle").textContent = `La palabra del dia es ${newWord}`;
       localStorage.setItem('wordOfTheDay', newWord);
       localStorage.setItem('wordDate', currentDate.toDateString());
   }
@@ -154,7 +152,7 @@ function colorPick() {
 
 // Function to set bucket fill mode
 function setBucket() {
-  color = document.getElementById('color-picker').value;
+  color = document.getElementById("color-picker").value;
   canvas.setBackgroundColor(color);
   canvas.renderAll();
 }
