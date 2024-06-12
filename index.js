@@ -322,19 +322,18 @@ function selectTool(event) {
   event.currentTarget.classList.add('selected');
 }
 
-// Add event listeners to all tool buttons
-let toolButtons = document.querySelectorAll('.btn');
-toolButtons.forEach(button => {
-  button.addEventListener('click', selectTool);
-});
+
 
 //***************************************** EVENT LISTENERS ***************************************
 
 // Update the word of the day when the page loads
 updateWordOfTheDay();
 
-// Start the update process
-updateWordOfTheDay();
+// change button styles when selected
+let toolButtons = document.querySelectorAll('.btn');
+toolButtons.forEach(button => {
+  button.addEventListener('click', selectTool);
+});
 
 // add window event listener to trigger when window is resized
 window.addEventListener("resize", resize);
@@ -350,5 +349,4 @@ document.addEventListener("touchstart", setTouchPosition);
 
 document.getElementById("color-picker").addEventListener("change", colorPick);
 document.getElementById("brush").addEventListener("click", activateBrush);
-document.getElementById("bucket").addEventListener("click", activateBucket);
 setColor();
