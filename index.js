@@ -158,6 +158,7 @@ function hexToRgba(hex) {
 
 // Flood fill algorithm
 function floodFill(x, y, fillColor) {
+
   // Get image data
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const data = imageData.data;
@@ -230,6 +231,7 @@ function bucketFillHandler(e) {
   floodFill(x, y, color);
 }
 
+// remove bucket 
 function activateBrush() {
   console.log("Brush tool activated");
   
@@ -322,7 +324,15 @@ function selectTool(event) {
   event.currentTarget.classList.add('selected');
 }
 
-
+function activateEraser() {
+  erase();
+  // Remove flood fill handler to avoid unwanted triggers
+  canvas.removeEventListener('click', bucketFillHandler);
+  // Add event listeners for eraser tool
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mousedown', setPosition);
+  canvas.addEventListener('mouseenter', setPosition);
+}
 
 //***************************************** EVENT LISTENERS ***************************************
 
@@ -337,16 +347,6 @@ toolButtons.forEach(button => {
 
 // add window event listener to trigger when window is resized
 window.addEventListener("resize", resize);
-
-// add event listeners to trigger on different mouse events
-document.addEventListener("mousemove", draw);
-document.addEventListener("mousedown", setPosition);
-document.addEventListener("mouseenter", setPosition);
-
-// event listeners from touch events
-document.addEventListener("touchmove", touchDraw);
-document.addEventListener("touchstart", setTouchPosition);
-
 document.getElementById("color-picker").addEventListener("change", colorPick);
 document.getElementById("brush").addEventListener("click", activateBrush);
 setColor();
