@@ -69,10 +69,20 @@ header p.word-of-the-day {
     color: rgb(19, 19, 88);
     background: none;
     border: .8px #fafafb;
+    border-radius: 10px;
     height: 40px;
     width: 50%;
     position: relative;
+    transition: border-color 0.3s;
 }
+
+.btn.selected{
+    background: rgba(212, 203, 203, 0.235);
+    border-color: #007bff;
+    border-radius: 10px;
+}
+
+
 .btn:hover{
     background: rgba(212, 203, 203, 0.235);
 }
