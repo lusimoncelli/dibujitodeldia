@@ -1,5 +1,3 @@
-
-
 var canvas = document.getElementById("draw");
 var ctx = canvas.getContext("2d");
 let color = "#000";
@@ -105,11 +103,6 @@ function updateWordOfTheDay() {
   }
 }
 
-// Update the word of the day when the page loads
-updateWordOfTheDay();
-
-// Start the update process
-updateWordOfTheDay();
 //*************************************** SET BRUSH SIZE ******************************************
 
 
@@ -150,13 +143,107 @@ function colorPick() {
   setActiveColor();
 }
 
-// Function to set bucket fill mode
-function setBucket() {
-  color = document.getElementById("color-picker").value;
-  canvas.setBackgroundColor(color);
-  canvas.renderAll();
+//*************************************** FLOOD FILL ******************************************
+
+// Function to convert hex color to RGBA
+function hexToRgba(hex) {
+  let r = 0, g = 0, b = 0, a = 255;
+  if (hex.length == 7) {
+    r = parseInt(hex.slice(1, 3), 16);
+    g = parseInt(hex.slice(3, 5), 16);
+    b = parseInt(hex.slice(5, 7), 16);
+  }
+  return { r, g, b, a };
 }
 
+// Flood fill algorithm
+function floodFill(x, y, fillColor) {
+  // Get image data
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+
+  // Get the color of the clicked point
+  const targetColor = getPixelColor(data, x, y);
+  const fillColorRgba = hexToRgba(fillColor);
+
+  // If target color is the same as fill color, return
+  if (colorsMatch(targetColor, fillColorRgba)) return;
+
+  // Stack for pixels to fill
+  const stack = [];
+  stack.push([x, y]);
+
+  while (stack.length > 0) {
+    const [currentX, currentY] = stack.pop();
+    const currentColor = getPixelColor(data, currentX, currentY);
+
+    if (colorsMatch(currentColor, targetColor)) {
+      setPixelColor(data, currentX, currentY, fillColorRgba);
+
+      stack.push([currentX + 1, currentY]);
+      stack.push([currentX - 1, currentY]);
+      stack.push([currentX, currentY + 1]);
+      stack.push([currentX, currentY - 1]);
+    }
+  }
+
+  // Update the canvas with new image data
+  ctx.putImageData(imageData, 0, 0);
+}
+
+// Helper function to get the color of a pixel
+function getPixelColor(data, x, y) {
+  const index = (y * canvas.width + x) * 4;
+  return {
+    r: data[index],
+    g: data[index + 1],
+    b: data[index + 2],
+    a: data[index + 3]
+  };
+}
+
+// Helper function to set the color of a pixel
+function setPixelColor(data, x, y, color) {
+  const index = (y * canvas.width + x) * 4;
+  data[index] = color.r;
+  data[index + 1] = color.g;
+  data[index + 2] = color.b;
+  data[index + 3] = color.a;
+}
+
+// Helper function to compare two colors
+function colorsMatch(color1, color2) {
+  return color1.r === color2.r && color1.g === color2.g && color1.b === color2.b && color1.a === color2.a;
+}
+
+// Function to set bucket fill mode
+function setBucket() {
+  canvas.addEventListener('click', bucketFillHandler);
+}
+
+// Handler for filling with the paint bucket tool
+function bucketFillHandler(e) {
+  const rect = canvas.getBoundingClientRect();
+  const x = Math.floor(e.clientX - rect.left);
+  const y = Math.floor(e.clientY - rect.top);
+
+  floodFill(x, y, color);
+}
+
+function activateBrush() {
+  console.log("Brush tool activated");
+  
+  // Remove event listeners for other tools
+  canvas.removeEventListener('click', bucketFillHandler);
+  
+  // Add event listeners for brush tool
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mousedown', setPosition);
+  canvas.addEventListener('mouseenter', setPosition);
+
+  // Set the global composite operation to source-over (normal drawing)
+  ctx.globalCompositeOperation = "source-over";
+}
 
 //******************************************* RESIZE CANVAS ***************************************
 
@@ -223,7 +310,31 @@ function onSave() {
   link.delete;
 }
 
+//************************************** TOOL SELECTION ******************************************
+function selectTool(event) {
+  // Remove the 'selected' class from all buttons
+  let buttons = document.querySelectorAll('.btn');
+  buttons.forEach(button => {
+      button.classList.remove('selected');
+  });
+
+  // Add the 'selected' class to the clicked button
+  event.currentTarget.classList.add('selected');
+}
+
+// Add event listeners to all tool buttons
+let toolButtons = document.querySelectorAll('.btn');
+toolButtons.forEach(button => {
+  button.addEventListener('click', selectTool);
+});
+
 //***************************************** EVENT LISTENERS ***************************************
+
+// Update the word of the day when the page loads
+updateWordOfTheDay();
+
+// Start the update process
+updateWordOfTheDay();
 
 // add window event listener to trigger when window is resized
 window.addEventListener("resize", resize);
@@ -238,4 +349,6 @@ document.addEventListener("touchmove", touchDraw);
 document.addEventListener("touchstart", setTouchPosition);
 
 document.getElementById("color-picker").addEventListener("change", colorPick);
+document.getElementById("brush").addEventListener("click", activateBrush);
+document.getElementById("bucket").addEventListener("click", activateBucket);
 setColor();
