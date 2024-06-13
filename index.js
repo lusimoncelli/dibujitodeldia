@@ -1,30 +1,19 @@
 var canvas = document.getElementById("draw");
 var ctx = canvas.getContext("2d");
+var pos = { x: 0, y: 0 }; // initialize position as 0,0
+
 let color = "#000";
 let offsetX = canvas.offsetLeft;
 let offsetY = canvas.offsetTop;
 let brushthickness = 7;
 let points = []; // Array to store the points of lines
-var pos = { x: 0, y: 0 }; // initialize position as 0,0
+let toolButtons = document.querySelectorAll(".btn"); // buttons
 
 const erase = () => (ctx.globalCompositeOperation = "destination-out");
 
-//set current color
-document.querySelector(".color-btn div").style.backgroundColor = color;
 
-resize();
-
-function sizeList() {
-  document.querySelector(".size-list").classList.toggle("show-list");
-  brushSize();
-}
 
 //*************************************** WORD OF THE DAY ******************************************
-
-// Function to select a random word from the list
-function getRandomWord() {
-  return words[Math.floor(Math.random() * words.length)];
-}
 
 // Function to update the word of the day
 function updateWordOfTheDay() {
@@ -54,6 +43,11 @@ function updateWordOfTheDay() {
 
 //*************************************** SET BRUSH SIZE ******************************************
 
+function sizeList() {
+  document.querySelector(".size-list").classList.toggle("show-list");
+  brushSize();
+}
+
 function brushSize() {
   var brushSet = document.getElementsByClassName("size");
   Array.prototype.forEach.call(brushSet, function (element) {
@@ -64,16 +58,23 @@ function brushSize() {
   });
 }
 
-//**************************************** SET COLOR TO PALETTE ***********************************
+//**************************************** CLEAR CANVAS *************************************
 
+function clear() {
+  // Clear the canvas and redraw from scratch
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+//****************************************** COLOR STUFF *****************************************
+
+// set color to palette
 function setActiveColor() {
   document.querySelector(".color-btn div").style.backgroundColor = color;
   ctx.strokeStyle = color;
   ctx.globalCompositeOperation = "source-over";
 }
 
-//**************************************** SET COLOR TO BRUSH *************************************
-
+// set color to brush
 function setColor() {
   var palette = document.getElementsByClassName("color");
   Array.prototype.forEach.call(palette, function (element) {
@@ -84,19 +85,10 @@ function setColor() {
   });
 }
 
-function clear() {
-  // Clear the canvas and redraw from scratch
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-//****************************************** COLOR PICKER *****************************************
-
 function colorPick() {
   color = document.getElementById("color-picker").value;
   setActiveColor();
 }
-
-//*************************************** FLOOD FILL ******************************************
 
 // Function to convert hex color to RGBA
 function hexToRgba(hex) {
@@ -111,6 +103,18 @@ function hexToRgba(hex) {
   }
   return { r, g, b, a };
 }
+
+// compare two colors
+function colorsMatch(color1, color2) {
+  return (
+    color1.r === color2.r &&
+    color1.g === color2.g &&
+    color1.b === color2.b &&
+    color1.a === color2.a
+  );
+}
+
+//*************************************** FLOOD FILL ******************************************
 
 // Flood fill algorithm
 function floodFill(x, y, fillColor) {
@@ -167,16 +171,6 @@ function setPixelColor(data, x, y, color) {
   data[index + 3] = color.a;
 }
 
-// compare two colors
-function colorsMatch(color1, color2) {
-  return (
-    color1.r === color2.r &&
-    color1.g === color2.g &&
-    color1.b === color2.b &&
-    color1.a === color2.a
-  );
-}
-
 // Handler for filling with the paint bucket tool
 function bucketFillHandler(e) {
   const rect = canvas.getBoundingClientRect();
@@ -189,8 +183,23 @@ function bucketFillHandler(e) {
 //******************************************* RESIZE CANVAS ***************************************
 
 function resize() {
-  ctx.canvas.width = window.innerWidth - 20;
-  ctx.canvas.height = window.innerHeight;
+  // Create a temporary canvas to store the current content
+  const tempCanvas = document.createElement('canvas');
+  const tempCtx = tempCanvas.getContext('2d');
+
+  // Set the temporary canvas size to match the current canvas
+  tempCanvas.width = canvas.width;
+  tempCanvas.height = canvas.height;
+
+  // Copy the current content to the temporary canvas
+  tempCtx.drawImage(canvas, 0, 0);
+
+  // Resize the main canvas
+  canvas.width = window.innerWidth - 20;
+  canvas.height = window.innerHeight;
+
+  // Draw the temporary canvas content back onto the resized canvas
+  ctx.drawImage(tempCanvas, 0, 0);
 }
 
 //**************************************** SET CURSOR POSITION *************************************
@@ -319,21 +328,25 @@ function activateBucket() {
   canvas.addEventListener("click", bucketFillHandler);
 }
 
-//***************************************** EVENT LISTENERS ***************************************
+//***************************************** MAIN AND EVENT LISTENERS ***************************************
 
-// Update the word of the day when the page loads
-updateWordOfTheDay();
+document.querySelector(".color-btn div").style.backgroundColor = color; //set current color
+
+resize(); // initiate canvas
+updateWordOfTheDay(); // Update the word of the day when the page loads
+setColor(); // set color
 
 // change button styles when selected
-let toolButtons = document.querySelectorAll(".btn");
 toolButtons.forEach((button) => {
   button.addEventListener("click", selectTool);
 });
 
+// event listeners
 window.addEventListener("resize", resize); // resize window
 document.getElementById("color-picker").addEventListener("change", colorPick); // colorpick trigger
 document.getElementById("brush").addEventListener("click", activateBrush); // brush trigger
 document.getElementById("eraser").addEventListener("click", activateEraser); // eraser trigger
 document.getElementById("trash").addEventListener("click", clear); // trashcan trigger
 document.getElementById("bucket").addEventListener("click", activateBucket); // bucket trigger
-setColor();
+
+
