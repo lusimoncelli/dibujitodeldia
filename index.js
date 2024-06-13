@@ -138,6 +138,11 @@ function setColor() {
   });
 }
 
+function clear(){
+    // Clear the canvas and redraw from scratch
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
 //****************************************** COLOR PICKER *****************************************
 
 function colorPick() {
@@ -368,4 +373,5 @@ window.addEventListener("resize", resize);
 document.getElementById("color-picker").addEventListener("change", colorPick); // colorpick trigger
 document.getElementById("brush").addEventListener("click", activateBrush); // brush trigger
 document.getElementById("eraser").addEventListener("click", activateEraser); // eraser trigger
+document.getElementById("trash").addEventListener("click", clear);
 setColor();
