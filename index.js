@@ -4,6 +4,8 @@ let color = "#000";
 let offsetX = canvas.offsetLeft;
 let offsetY = canvas.offsetTop;
 let brushthickness = 7;
+let points = []; // Array to store the points of lines
+var pos = { x: 0, y: 0 }; // initialize position as 0,0
 
 const erase = () => (ctx.globalCompositeOperation = "destination-out");
 
@@ -257,37 +259,13 @@ function resize() {
 
 //**************************************** SET CURSOR POSITION *************************************
 
-// initialize position as 0,0
-var pos = { x: 0, y: 0 };
-
 // new position from mouse events
 function setPosition(e) {
   pos.x = parseInt(e.clientX - offsetX);
   pos.y = parseInt(e.clientY - offsetY);
 }
 
-function setTouchPosition(e){
-  pos.x = parseInt(e.touches[0].clientX - offsetX);
-  pos.y = parseInt(e.touches[0].clientY - offsetY);
-}
-
 //********************************************** DRAW *********************************************
-
-function draw(e) {
-  if (e.buttons !== 1) return; // if mouse is not clicked, do not go further
-
-  ctx.beginPath(); // begin the drawing path
-  ctx.lineWidth = brushthickness; // width of line
-  ctx.lineCap = "round"; // rounded end cap
-  ctx.strokeStyle = color; // hex color of line
-  ctx.moveTo(pos.x, pos.y); // from position
-  setPosition(e);
-  ctx.lineTo(pos.x, pos.y); // to position
-  ctx.closePath();
-  ctx.stroke(); // draw it!
-}
-
-let points = []; // Array to store the points
 
 // Function to handle drawing
 function drawSmooth(e) {
@@ -295,8 +273,8 @@ function drawSmooth(e) {
 
   // Capture the current mouse position
   const currentPos = {
-    x: e.clientX - canvas.offsetLeft,
-    y: e.clientY - canvas.offsetTop
+    x: e.clientX - offsetX,
+    y: e.clientY - offsetY
   };
 
   // Add the current position to the points array
@@ -336,22 +314,6 @@ function drawSmooth(e) {
 // Function to clear points when the drawing ends
 function endDrawing() {
   points = [];
-}
-
-function touchDraw(e) {
-
-  setTouchPosition(e);
-
-  ctx.beginPath(); // begin the drawing path
-  ctx.lineWidth = brushthickness; // width of line
-  ctx.lineCap = "round"; // rounded end cap
-  ctx.strokeStyle = color; // hex color of line
-  ctx.moveTo(pos.x, pos.y); // from position
-  setTouchPosition(e);
-  ctx.lineTo(pos.x, pos.y); // to position
-  ctx.closePath();
-  ctx.stroke(); // draw it!
-  setTouchPosition(e);
 }
 
 //************************************** DOWNLOAD CANVAS ******************************************
