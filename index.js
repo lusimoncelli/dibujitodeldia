@@ -239,9 +239,10 @@ function activateBrush() {
   canvas.removeEventListener('click', bucketFillHandler);
   
   // Add event listeners for brush tool
-  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mousemove', drawSmooth);
   canvas.addEventListener('mousedown', setPosition);
   canvas.addEventListener('mouseenter', setPosition);
+  canvas.addEventListener('mouseup', endDrawing);
 
   // Set the global composite operation to source-over (normal drawing)
   ctx.globalCompositeOperation = "source-over";
@@ -286,6 +287,57 @@ function draw(e) {
   ctx.stroke(); // draw it!
 }
 
+let points = []; // Array to store the points
+
+// Function to handle drawing
+function drawSmooth(e) {
+  if (e.buttons !== 1) return; // if mouse is not clicked, do not go further
+
+  // Capture the current mouse position
+  const currentPos = {
+    x: e.clientX - canvas.offsetLeft,
+    y: e.clientY - canvas.offsetTop
+  };
+
+  // Add the current position to the points array
+  points.push(currentPos);
+
+  // Start drawing with the points captured so far
+  if (points.length > 2) {
+    ctx.beginPath();
+    ctx.lineWidth = brushthickness; // width of line
+    ctx.lineWidth = brushthickness;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = color;
+
+    ctx.moveTo(points[0].x, points[0].y);
+
+    // Use quadratic curves for smooth drawing
+    for (let i = 1; i < points.length - 2; i++) {
+      const midPoint = {
+        x: (points[i].x + points[i + 1].x) / 2,
+        y: (points[i].y + points[i + 1].y) / 2
+      };
+      ctx.quadraticCurveTo(points[i].x, points[i].y, midPoint.x, midPoint.y);
+    }
+
+    // For the last segment
+    ctx.quadraticCurveTo(
+      points[points.length - 2].x,
+      points[points.length - 2].y,
+      points[points.length - 1].x,
+      points[points.length - 1].y
+    );
+
+    ctx.stroke();
+  }
+}
+
+// Function to clear points when the drawing ends
+function endDrawing() {
+  points = [];
+}
+
 function touchDraw(e) {
 
   setTouchPosition(e);
@@ -312,7 +364,7 @@ function onSave() {
   link.delete;
 }
 
-//************************************** TOOL SELECTION ******************************************
+//************************************** TOOL SELECTION FOR BUTTONS ******************************************
 function selectTool(event) {
   // Remove the 'selected' class from all buttons
   let buttons = document.querySelectorAll('.btn');
@@ -329,7 +381,7 @@ function activateEraser() {
   // Remove flood fill handler to avoid unwanted triggers
   canvas.removeEventListener('click', bucketFillHandler);
   // Add event listeners for eraser tool
-  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mousemove', drawSmooth);
   canvas.addEventListener('mousedown', setPosition);
   canvas.addEventListener('mouseenter', setPosition);
 }
