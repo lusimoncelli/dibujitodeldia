@@ -220,7 +220,6 @@ function drawSmooth(e) {
   if (points.length > 2) {
     ctx.beginPath();
     ctx.lineWidth = brushthickness; // width of line
-    ctx.lineWidth = brushthickness;
     ctx.lineCap = "round";
     ctx.strokeStyle = color;
 
@@ -281,6 +280,8 @@ function activateEraser() {
   erase();
   // Remove flood fill handler to avoid unwanted triggers
   canvas.removeEventListener("click", bucketFillHandler);
+  canvas.classList.remove('bucket-cursor');
+
   // Add event listeners for eraser tool
   canvas.addEventListener("mousemove", drawSmooth);
   canvas.addEventListener("mousedown", setPosition);
@@ -292,6 +293,7 @@ function activateBrush() {
   console.log("Brush tool activated");
 
   // Remove event listeners for other tools
+  canvas.classList.remove('bucket-cursor');
   canvas.removeEventListener("click", bucketFillHandler);
 
   // Add event listeners for brush tool
@@ -307,6 +309,7 @@ function activateBrush() {
 // set bucket fill mode
 function activateBucket() {
   console.log("Bucket tool activated");
+  canvas.classList.add('bucket-cursor');
 
   canvas.removeEventListener("mousemove", drawSmooth);
   canvas.removeEventListener("mousedown", setPosition);
