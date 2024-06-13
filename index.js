@@ -233,23 +233,6 @@ function bucketFillHandler(e) {
   floodFill(x, y, color);
 }
 
-// remove bucket 
-function activateBrush() {
-  console.log("Brush tool activated");
-  
-  // Remove event listeners for other tools
-  canvas.removeEventListener('click', bucketFillHandler);
-  
-  // Add event listeners for brush tool
-  canvas.addEventListener('mousemove', drawSmooth);
-  canvas.addEventListener('mousedown', setPosition);
-  canvas.addEventListener('mouseenter', setPosition);
-  canvas.addEventListener('mouseup', endDrawing);
-
-  // Set the global composite operation to source-over (normal drawing)
-  ctx.globalCompositeOperation = "source-over";
-}
-
 //******************************************* RESIZE CANVAS ***************************************
 
 function resize() {
@@ -326,7 +309,9 @@ function onSave() {
   link.delete;
 }
 
-//************************************** TOOL SELECTION FOR BUTTONS ******************************************
+//************************************** TOOL SELECTION ******************************************
+
+// change selected button style
 function selectTool(event) {
   // Remove the 'selected' class from all buttons
   let buttons = document.querySelectorAll('.btn');
@@ -339,6 +324,7 @@ function selectTool(event) {
 }
 
 function activateEraser() {
+  console.log("Eraser tool activated");
   erase();
   // Remove flood fill handler to avoid unwanted triggers
   canvas.removeEventListener('click', bucketFillHandler);
@@ -346,6 +332,24 @@ function activateEraser() {
   canvas.addEventListener('mousemove', drawSmooth);
   canvas.addEventListener('mousedown', setPosition);
   canvas.addEventListener('mouseenter', setPosition);
+  canvas.addEventListener('mouseup', endDrawing);
+}
+
+
+function activateBrush() {
+  console.log("Brush tool activated");
+  
+  // Remove event listeners for other tools
+  canvas.removeEventListener('click', bucketFillHandler);
+  
+  // Add event listeners for brush tool
+  canvas.addEventListener('mousemove', drawSmooth);
+  canvas.addEventListener('mousedown', setPosition);
+  canvas.addEventListener('mouseenter', setPosition);
+  canvas.addEventListener('mouseup', endDrawing);
+
+  // Set the global composite operation to source-over (normal drawing)
+  ctx.globalCompositeOperation = "source-over";
 }
 
 //***************************************** EVENT LISTENERS ***************************************
@@ -361,6 +365,7 @@ toolButtons.forEach(button => {
 
 // add window event listener to trigger when window is resized
 window.addEventListener("resize", resize);
-document.getElementById("color-picker").addEventListener("change", colorPick);
-document.getElementById("brush").addEventListener("click", activateBrush);
+document.getElementById("color-picker").addEventListener("change", colorPick); // colorpick trigger
+document.getElementById("brush").addEventListener("click", activateBrush); // brush trigger
+document.getElementById("eraser").addEventListener("click", activateEraser); // eraser trigger
 setColor();
