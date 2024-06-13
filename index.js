@@ -158,7 +158,7 @@ function getPixelColor(data, x, y) {
   };
 }
 
-// Helper function to set the color of a pixel
+// set the color of a pixel
 function setPixelColor(data, x, y, color) {
   const index = (y * canvas.width + x) * 4;
   data[index] = color.r;
@@ -167,7 +167,7 @@ function setPixelColor(data, x, y, color) {
   data[index + 3] = color.a;
 }
 
-// Helper function to compare two colors
+// compare two colors
 function colorsMatch(color1, color2) {
   return (
     color1.r === color2.r &&
@@ -175,11 +175,6 @@ function colorsMatch(color1, color2) {
     color1.b === color2.b &&
     color1.a === color2.a
   );
-}
-
-// Function to set bucket fill mode
-function setBucket() {
-  canvas.addEventListener("click", bucketFillHandler);
 }
 
 // Handler for filling with the paint bucket tool
@@ -309,6 +304,18 @@ function activateBrush() {
   ctx.globalCompositeOperation = "source-over";
 }
 
+// set bucket fill mode
+function activateBucket() {
+  console.log("Bucket tool activated");
+
+  canvas.removeEventListener("mousemove", drawSmooth);
+  canvas.removeEventListener("mousedown", setPosition);
+  canvas.removeEventListener("mouseenter", setPosition);
+  canvas.removeEventListener("mouseup", endDrawing);
+
+  canvas.addEventListener("click", bucketFillHandler);
+}
+
 //***************************************** EVENT LISTENERS ***************************************
 
 // Update the word of the day when the page loads
@@ -320,10 +327,10 @@ toolButtons.forEach((button) => {
   button.addEventListener("click", selectTool);
 });
 
-// add window event listener to trigger when window is resized
-window.addEventListener("resize", resize);
+window.addEventListener("resize", resize); // resize window
 document.getElementById("color-picker").addEventListener("change", colorPick); // colorpick trigger
 document.getElementById("brush").addEventListener("click", activateBrush); // brush trigger
 document.getElementById("eraser").addEventListener("click", activateEraser); // eraser trigger
-document.getElementById("trash").addEventListener("click", clear); // trash can trigger
+document.getElementById("trash").addEventListener("click", clear); // trashcan trigger
+document.getElementById("bucket").addEventListener("click", activateBucket); // bucket trigger
 setColor();
