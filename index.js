@@ -74,11 +74,13 @@ function saveCanvasToLocalStorage() {
 
   // Store the data URL in localStorage
   localStorage.setItem("canvasData", dataURL);
+  localStorage.setItem("selectedColor", color);
 }
 
 function loadCanvasFromLocalStorage() {
   // Check if there's saved canvas data in localStorage
   const dataURL = localStorage.getItem("canvasData");
+  const savedColor = localStorage.getItem("selectedColor");
 
   if (dataURL) {
     // Create an image element to load the data URL
@@ -89,6 +91,10 @@ function loadCanvasFromLocalStorage() {
       // Draw the loaded image onto the canvas
       ctx.drawImage(img, 0, 0);
     };
+  }
+  if (savedColor) {
+    color = savedColor; // Set the color variable to the saved color
+    setActiveColor();   // Update the UI and brush with the saved color
   }
 }
 
@@ -101,6 +107,7 @@ function setColor() {
     element.addEventListener("click", function () {
       color = element.getAttribute("style").split("--set-color:")[1];
       setActiveColor();
+      saveCanvasToLocalStorage(); // save color to local storage
     });
   });
 }
