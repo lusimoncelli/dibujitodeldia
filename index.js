@@ -43,11 +43,13 @@ function updateWordOfTheDay() {
 
 //*************************************** SET BRUSH SIZE ******************************************
 
+// open brush size list
 function sizeList() {
   document.querySelector(".size-list").classList.toggle("show-list");
   brushSize();
 }
 
+// set brushthickness
 function brushSize() {
   var brushSet = document.getElementsByClassName("size");
   Array.prototype.forEach.call(brushSet, function (element) {
@@ -67,14 +69,7 @@ function clear() {
 
 //****************************************** COLOR STUFF *****************************************
 
-// set color to palette
-function setActiveColor() {
-  document.querySelector(".color-btn div").style.backgroundColor = color;
-  ctx.strokeStyle = color;
-  ctx.globalCompositeOperation = "source-over";
-}
-
-// set color to brush
+// select color
 function setColor() {
   var palette = document.getElementsByClassName("color");
   Array.prototype.forEach.call(palette, function (element) {
@@ -85,12 +80,20 @@ function setColor() {
   });
 }
 
+// set color to paint
+function setActiveColor() {
+  document.querySelector(".color-btn div").style.backgroundColor = color;
+  ctx.strokeStyle = color;
+  ctx.globalCompositeOperation = "source-over";
+}
+
+// set color to paint if color-picker is used
 function colorPick() {
   color = document.getElementById("color-picker").value;
   setActiveColor();
 }
 
-// Function to convert hex color to RGBA
+// convert hex color to RGBA
 function hexToRgba(hex) {
   let r = 0,
     g = 0,
