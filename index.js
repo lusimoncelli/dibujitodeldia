@@ -60,12 +60,38 @@ function brushSize() {
   });
 }
 
-//**************************************** CLEAR CANVAS *************************************
+//**************************************** CLEAR AND LOAD CANVAS *************************************
 
 function clear() {
   // Clear the canvas and redraw from scratch
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  localStorage.removeItem("canvasData");
 }
+
+function saveCanvasToLocalStorage() {
+  // Convert the canvas content to a data URL
+  const dataURL = canvas.toDataURL();
+
+  // Store the data URL in localStorage
+  localStorage.setItem("canvasData", dataURL);
+}
+
+function loadCanvasFromLocalStorage() {
+  // Check if there's saved canvas data in localStorage
+  const dataURL = localStorage.getItem("canvasData");
+
+  if (dataURL) {
+    // Create an image element to load the data URL
+    const img = new Image();
+    img.src = dataURL;
+
+    img.onload = function () {
+      // Draw the loaded image onto the canvas
+      ctx.drawImage(img, 0, 0);
+    };
+  }
+}
+
 
 //****************************************** COLOR STUFF *****************************************
 
@@ -255,6 +281,7 @@ function drawSmooth(e) {
     );
 
     ctx.stroke();
+    saveCanvasToLocalStorage();
   }
 }
 
@@ -332,6 +359,10 @@ function activateBucket() {
 }
 
 //***************************************** MAIN AND EVENT LISTENERS ***************************************
+
+
+window.addEventListener("load", loadCanvasFromLocalStorage); // load the saved canvas data on page load
+window.addEventListener("beforeunload", saveCanvasToLocalStorage); // save the canvas data before unloading the page
 
 document.querySelector(".color-btn div").style.backgroundColor = color; //set current color
 
