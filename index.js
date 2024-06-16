@@ -394,3 +394,12 @@ document.getElementById("trash").addEventListener("click", function () {
   document.getElementById("brush").classList.add("selected"); // select brush
   activateBrush();
 });
+
+// keyboard shortcut to save png
+document.addEventListener("keydown", function (event) {
+  if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+    event.preventDefault();
+    onSave();
+    undoCanvasState();
+  }
+});
