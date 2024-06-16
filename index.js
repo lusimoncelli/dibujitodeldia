@@ -11,8 +11,6 @@ let toolButtons = document.querySelectorAll(".btn"); // buttons
 
 const erase = () => (ctx.globalCompositeOperation = "destination-out");
 
-
-
 //*************************************** WORD OF THE DAY ******************************************
 
 // Function to update the word of the day
@@ -34,7 +32,9 @@ function updateWordOfTheDay() {
       .then((words) => {
         const newWord = words[Math.floor(Math.random() * words.length)];
         console.log(newWord);
-        document.querySelector("header p.subtitle").textContent = `La palabra del día es ${newWord}`;
+        document.querySelector(
+          "header p.subtitle"
+        ).textContent = `La palabra del día es ${newWord}`;
         localStorage.setItem("wordOfTheDay", newWord);
         localStorage.setItem("wordDate", currentDate.toDateString());
       });
@@ -91,7 +91,6 @@ function loadCanvasFromLocalStorage() {
     };
   }
 }
-
 
 //****************************************** COLOR STUFF *****************************************
 
@@ -213,8 +212,8 @@ function bucketFillHandler(e) {
 
 function resize() {
   // Create a temporary canvas to store the current content
-  const tempCanvas = document.createElement('canvas');
-  const tempCtx = tempCanvas.getContext('2d');
+  const tempCanvas = document.createElement("canvas");
+  const tempCtx = tempCanvas.getContext("2d");
 
   // Set the temporary canvas size to match the current canvas
   tempCanvas.width = canvas.width;
@@ -319,7 +318,7 @@ function activateEraser() {
   erase();
   // Remove flood fill handler to avoid unwanted triggers
   canvas.removeEventListener("click", bucketFillHandler);
-  canvas.classList.remove('bucket-cursor');
+  canvas.classList.remove("bucket-cursor");
 
   // Add event listeners for eraser tool
   canvas.addEventListener("mousemove", drawSmooth);
@@ -332,7 +331,7 @@ function activateBrush() {
   console.log("Brush tool activated");
 
   // Remove event listeners for other tools
-  canvas.classList.remove('bucket-cursor');
+  canvas.classList.remove("bucket-cursor");
   canvas.removeEventListener("click", bucketFillHandler);
 
   // Add event listeners for brush tool
@@ -348,7 +347,7 @@ function activateBrush() {
 // set bucket fill mode
 function activateBucket() {
   console.log("Bucket tool activated");
-  canvas.classList.add('bucket-cursor');
+  canvas.classList.add("bucket-cursor");
 
   canvas.removeEventListener("mousemove", drawSmooth);
   canvas.removeEventListener("mousedown", setPosition);
@@ -359,7 +358,6 @@ function activateBucket() {
 }
 
 //***************************************** MAIN AND EVENT LISTENERS ***************************************
-
 
 window.addEventListener("load", loadCanvasFromLocalStorage); // load the saved canvas data on page load
 window.addEventListener("beforeunload", saveCanvasToLocalStorage); // save the canvas data before unloading the page
@@ -380,7 +378,12 @@ window.addEventListener("resize", resize); // resize window
 document.getElementById("color-picker").addEventListener("change", colorPick); // colorpick trigger
 document.getElementById("brush").addEventListener("click", activateBrush); // brush trigger
 document.getElementById("eraser").addEventListener("click", activateEraser); // eraser trigger
-document.getElementById("trash").addEventListener("click", clear); // trashcan trigger
 document.getElementById("bucket").addEventListener("click", activateBucket); // bucket trigger
 
-
+// trashcan trigger
+document.getElementById("trash").addEventListener("click", function () {
+  clear(); // clear content
+  this.classList.remove("selected"); // unselect trashcan
+  document.getElementById("brush").classList.add("selected"); // select brush
+  activateBrush();
+});
