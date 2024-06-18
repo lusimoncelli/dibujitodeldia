@@ -64,11 +64,19 @@ header p.word-of-the-day {
 }
 .canvas-container {
   height: 90vh;
-  cursor: url("./images/pencil.png"), auto;
+  cursor: url("./src/pencil.png"), auto;
 }
 
 .bucket-cursor {
-  cursor: url("./images/bucket.cur"), auto;
+  cursor: url("./src/bucket.cur"), auto;
+}
+
+.paintbrush-cursor {
+  cursor: url("./src/paintbrush.cur"), auto;
+}
+
+.eraser-cursor {
+  cursor: url("./src/eraser.cur"), auto;
 }
 
 .btn {

@@ -322,10 +322,12 @@ function selectTool(event) {
 
 function activateEraser() {
   console.log("Eraser tool activated");
+  canvas.classList.add("eraser-cursor");
   erase();
   // Remove flood fill handler to avoid unwanted triggers
   canvas.removeEventListener("click", bucketFillHandler);
   canvas.classList.remove("bucket-cursor");
+  canvas.classList.remove("paintbrush-cursor");
 
   // Add event listeners for eraser tool
   canvas.addEventListener("mousemove", drawSmooth);
@@ -336,9 +338,11 @@ function activateEraser() {
 
 function activateBrush() {
   console.log("Brush tool activated");
+  canvas.classList.add("paintbrush-cursor");
 
   // Remove event listeners for other tools
   canvas.classList.remove("bucket-cursor");
+  canvas.classList.remove("eraser-cursor");
   canvas.removeEventListener("click", bucketFillHandler);
 
   // Add event listeners for brush tool
@@ -356,6 +360,9 @@ function activateBucket() {
   console.log("Bucket tool activated");
   canvas.classList.add("bucket-cursor");
 
+  // Remove event listeners for other tools
+  canvas.classList.remove("paintbrush-cursor");
+  canvas.classList.remove("eraser-cursor");
   canvas.removeEventListener("mousemove", drawSmooth);
   canvas.removeEventListener("mousedown", setPosition);
   canvas.removeEventListener("mouseenter", setPosition);
